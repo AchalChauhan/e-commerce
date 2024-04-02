@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -39,6 +40,26 @@ export const signInWithGooglePopup  = ()=> signInWithPopup(auth, provider);
 // Getting DataBase form Firestore
 export const db = getFirestore();
 
-// const creatUserDocumentFromAuth = async (userAuth)=>{
+export const creatUserDocumentFromAuth = async (userAuth)=>{
+  const userDocRef = doc(db, 'users', userAuth.uid)
+  const userSnapshot = await getDoc(userDocRef);
 
-// }
+  if(!userSnapshot.exists()){
+    const {displayName, email} = userAuth;
+    const createAt = new Date;
+
+    try {
+      await setDoc(userDocRef, {
+        displayName,
+        email,
+        createAt
+      });
+    } catch (error) {
+      console.log(error, "error while creating the error");
+    }
+  }
+
+  return userDocRef;
+
+}
+

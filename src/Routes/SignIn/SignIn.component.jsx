@@ -1,11 +1,11 @@
-import React from 'react'
-import { signInWithGooglePopup } from '../../utils/fireBase.uils'
+/* eslint-disable no-unused-vars */
+import { signInWithGooglePopup, creatUserDocumentFromAuth } from '../../utils/fireBase.uils'
 
 const SignIn = () => {
 
     const logInGoogleUser = async ()=>{
-        const response = await signInWithGooglePopup();
-        console.log(response)
+        const { user } = await signInWithGooglePopup();
+        const userDocRef = await creatUserDocumentFromAuth(user)
     }
 
   return (
