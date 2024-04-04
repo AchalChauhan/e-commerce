@@ -37,6 +37,10 @@ export const auth = getAuth();
 //  functions that create's a popUp for google signIn
 export const signInWithGooglePopup  = ()=> signInWithPopup(auth, provider);
 
+//  functions that redirects for google signIn
+export const signInWithGoogleRedirect = ()=> signInWithRedirect(auth, provider);
+
+
 // Getting DataBase form Firestore
 export const db = getFirestore();
 
