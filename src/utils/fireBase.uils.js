@@ -5,9 +5,9 @@ import {
   signInWithRedirect,
   signInWithPopup,
   GoogleAuthProvider,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
-import {getFirestore, doc, setDoc, getDoc} from 'firebase/firestore'
-
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
 //  FireBase Project config data retrived form FireBase console
 const firebaseConfig = {
@@ -23,40 +23,41 @@ const firebaseConfig = {
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 
-
-
-const provider = new GoogleAuthProvider();
+const googleProvider = new GoogleAuthProvider();
 
 // Cofigration to make user select an account
-provider.setCustomParameters({
-    prompt : "select_account"
-})
+googleProvider.setCustomParameters({
+  prompt: "select_account",
+});
 
 export const auth = getAuth();
 
 //  functions that create's a popUp for google signIn
-export const signInWithGooglePopup  = ()=> signInWithPopup(auth, provider);
+export const signInWithGooglePopup = () =>
+  signInWithPopup(auth, googleProvider);
 
 //  functions that redirects for google signIn
-export const signInWithGoogleRedirect = ()=> signInWithRedirect(auth, provider);
-
+export const signInWithGoogleRedirect = () =>
+  signInWithRedirect(auth, googleProvider);
 
 // Getting DataBase form Firestore
 export const db = getFirestore();
 
-export const creatUserDocumentFromAuth = async (userAuth)=>{
-  const userDocRef = doc(db, 'users', userAuth.uid)
+export const creatUserDocumentFromAuth = async (userAuth, additionalInfo ={}) => {
+  if(!userAuth) return;
+  const userDocRef = doc(db, "users", userAuth.uid);
   const userSnapshot = await getDoc(userDocRef);
 
-  if(!userSnapshot.exists()){
-    const {displayName, email} = userAuth;
-    const createAt = new Date;
+  if (!userSnapshot.exists()) {
+    const { displayName, email } = userAuth;
+    const createAt = new Date();
 
     try {
       await setDoc(userDocRef, {
         displayName,
         email,
-        createAt
+        createAt,
+        ...additionalInfo,
       });
     } catch (error) {
       console.log(error, "error while creating the error");
@@ -64,6 +65,10 @@ export const creatUserDocumentFromAuth = async (userAuth)=>{
   }
 
   return userDocRef;
+};
 
-}
+export const createAuthUserWithEmailAndPassword = async (email, password) => {
+  if(!email || !password) return;
 
+  return await createUserWithEmailAndPassword(auth, email, password);
+};
