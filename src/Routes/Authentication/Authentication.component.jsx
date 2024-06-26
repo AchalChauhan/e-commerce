@@ -4,22 +4,21 @@ import {
   creatUserDocumentFromAuth,
 } from "../../utils/fireBase.uils";
 import SignUpForm from "../../components/SignUp/SignUpForm.component";
+import SignInForm from "../../components/SignIn/SignInForm.component";
+import './Authentication.styles.scss'
 
 
-const SignIn = () => {
+const Authentication = () => {
   
-  const logInGoogleUser = async () => {
-    const { user } = await signInWithGooglePopup();
-    const userDocRef = await creatUserDocumentFromAuth(user);
-  };
-
   return (
     <>
       <h1>Sign In page</h1>
-      <button onClick={logInGoogleUser}>Google</button>
+      <div className="authentication-container">
+      <SignInForm/>
       <SignUpForm/>
+      </div>
     </>
   );
 };
 
-export default SignIn;
+export default Authentication;
